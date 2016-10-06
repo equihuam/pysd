@@ -542,13 +542,14 @@ def parse_general_expression(element, namespace=None, subscript_dict=None, macro
                 else:
                     data = np.tile(float(n.text), shape)
                 datastr = np.array2string(data, separator=',').replace('\n', '').replace(' ', '')
-                return textwrap.dedent("""\
-                    xr.DataArray(data=%(datastr)s,
-                                 coords=%(coords)s,
-                                 dims=%(dims)s )""" % {
-                    'datastr': datastr,
-                    'coords': repr(coords),
-                    'dims': repr(dims)})
+                # return textwrap.dedent("""\
+                #     xr.DataArray(data=%(datastr)s,
+                #                  coords=%(coords)s,
+                #                  dims=%(dims)s )""" % {
+                #     'datastr': datastr,
+                #     'coords': repr(coords),
+                #     'dims': repr(dims)})
+                return datastr
 
             else:
                 return n.text.replace(' ', '')

@@ -32,6 +32,27 @@ def dict_find(in_dict, value):
     # Todo: make this robust to missing values
     return list(in_dict.keys())[list(in_dict.values()).index(value)]
 
+def sublookup(sub, subscript_dict):
+    size=[]
+    for i in sub.split(','):
+        i=i.strip()
+        try:
+            subscript_dict[i]
+            size.append(':')
+        except:
+            actual_families=[]
+            for key,value in subscript_dict.items():
+                for key_compare,value_compare in subscript_dict.items():
+                    if not (all(x in value_compare for x in value) and key != key_compare) \
+                            and key not in actual_families:
+                        actual_families.append(key)
+            for j in actual_families:
+                try:
+                    size.append(subscript_dict[j].index(i))
+                    break
+                except:
+                    pass
+    return '[%s]' % ','.join(map(str,size))
 
 def xrmerge(das, accept_new=True):
     """

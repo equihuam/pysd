@@ -53,10 +53,10 @@ def build(elements, subscript_dict, namespace, outfile_name):
     from __future__ import division
     import numpy as np
     from pysd import utils
-    import xarray as xr
 
     from pysd.functions import cache
     from pysd import functions
+    from pysd.functions import NamedArray as na
 
     _subscript_dict = %(subscript_dict)s
 
@@ -104,6 +104,8 @@ def build_element(element, subscript_dict):
     -------
 
     """
+    # todo: finish documenting the element
+
     if element['kind'] == 'constant':
         cache_type = "@cache('run')"
     elif element['kind'] in ['setup', 'stateful']:  # setups only get called once, caching is wasted
@@ -118,7 +120,20 @@ def build_element(element, subscript_dict):
         raise AttributeError("Bad value for 'kind'")
 
     if len(element['py_expr']) > 1:
-        contents = 'return utils.xrmerge([%(das)s])' % {'das': ',\n'.join(element['py_expr'])}
+        coordinates = utils.make_coord_dict(element['subs'], subscript_dict, terse=False)
+        array = [len(l) for l in coordinates.values()]
+        shape = dict(zip(coordinates.keys(), range(len(array))))
+        contents = "output = na(np.ndarray(%s), shape=%s)" % (repr(array), repr(shape))
+        contents += '\n'.join(
+            ["output%(sub)s=%(expr)s" % ({'sub': utils.sublookup(sub, subscript_dict),
+                                          'expr': expr})
+             for sub, expr in zip(element['subs'], element['py_expr'])])
+    elif len(element['subs']) == 1:
+        coordinates = utils.make_coord_dict(element['subs'][0], subscript_dict, terse=False)
+        array = [len(l) for l in coordinates.values()]
+        shape = dict(zip(coordinates.keys(), range(len(array))))
+        contents = 'return na(%(expr)s, %(shape)s)' % {'expr': element['py_expr'][0],
+                                                       'shape': repr(shape)}
     else:
         contents = 'return %(py_expr)s' % {'py_expr': element['py_expr'][0]}
 

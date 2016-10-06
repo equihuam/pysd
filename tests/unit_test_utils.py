@@ -6,6 +6,15 @@ import doctest
 
 class TestUtils(TestCase):
 
+    def test_sublookup(self):
+        from pysd.utils import sublookup
+        subscript_dict = {'Dim1': ['Entry 1', 'Entry 2'],
+                         'Dim2': ['Column 1', 'Column 2']}
+        actual = sublookup('Dim1,Entry 2,Column 1, Column 2',subscript_dict)
+        expected = '[:,1,0,1]'
+        self.assertSequenceEqual(actual, expected)
+
+
     def test_get_return_elements_subscirpts(self):
         from pysd.utils import get_return_elements
 

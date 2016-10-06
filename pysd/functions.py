@@ -908,3 +908,109 @@ def active_initial(expr, init_val):
         return init_val
     else:
         return expr
+
+
+# class NamedArray(object):
+#     def __init__(self, array=np.ndarray(), shape=dict()):
+#         self.object = {'array': array, 'shape': shape}
+#
+#     def shorthander(self, operation, other_object, swapped=False):
+#         a, b = 'a', 'b'
+#         if swapped:
+#             a, b = b, a
+#         if type(other_object) == int:
+#             result_vars = {'a': self.object['array'], 'b': other_object}
+#             result = eval('%(a)s %(op)s %(b)s' % {'a': a,
+#                                                   'op': operation,
+#                                                   'b': b},
+#                           result_vars)
+#             return namedarray({'array': result, 'shape': self.object['shape']})
+#         if len(self.object['shape']) >= len(other_object['shape']):
+#             result = self.object['array']
+#             other_numeral = other_object['array']
+#             dct = other_object['shape'].copy()
+#             refdct = self.object['shape'].copy()
+#             copyofref = self.object['shape'].copy()
+#         else:
+#             result = other_object['array']
+#             other_numeral = self.object['array']
+#             dct = self.object['shape'].copy()
+#             refdct = other_object['shape'].copy()
+#             copyofref = other_object['shape'].copy()
+#             a, b = b, a
+#
+#         difference = abs(len(refdct) - len(dct))
+#
+#         for key, val in dct.iteritems():
+#             result = np.swapaxes(result, copyofref[key], val + difference)
+#             copyofref[copyofref.keys()[copyofref.values().index(val + difference)]] = copyofref[key]
+#             copyofref[key] = val + difference
+#
+#         # Perform Operation Here Before Returning to Normal Shape
+#         result_vars = {'a': result, 'b': other_numeral}
+#         result = eval('%(a)s %(op)s %(b)s' % {'a': a,
+#                                               'op': operation,
+#                                               'b': b},
+#                       result_vars)
+#         ########################################################
+#
+#         for val in sorted(refdct.itervalues()):
+#             key = refdct.keys()[refdct.values().index(val)]
+#             result = np.swapaxes(result, copyofref[key], val)
+#             copyofref[copyofref.keys()[copyofref.values().index(val)]] = copyofref[key]
+#             copyofref[key] = val
+#         return namedarray({'array': result, 'shape': refdct})
+#
+#     def __add__(self, other_object):
+#         return self.shorthander('+', other_object)
+#
+#     def __radd__(self, other_object):
+#         return self.shorthander('+', other_object, True)
+#
+#     def __sub__(self, other_object):
+#         return self.shorthander('-', other_object)
+#
+#     def __rsub__(self, other_object):
+#         return self.shorthander('-', other_object, True)
+#
+#     def __mul__(self, other_object):
+#         return self.shorthander('*', other_object)
+#
+#     def __rmul__(self, other_object):
+#         return self.shorthander('*', other_object, True)
+#
+#     def __div__(self, other_object):
+#         return self.shorthander('/', other_object)
+#
+#     def __rdiv__(self, other_object):
+#         return self.shorthander('/', other_object, True)
+#
+#     def __neg__(self):
+#         return self.shorthander('*', -1)
+#
+#     def __pos__(self):
+#         return self
+#
+#     def __repr__(self):
+#         return repr(self.object['array'])
+#
+#     def __getitem__(self, rhs):
+#         if rhs in ['array', 'shape']:
+#             return self.object[rhs]
+#         iterate = 0
+#         if type(rhs) == int:
+#             iterate = 1
+#         elif type(rhs) == slice:
+#             pass
+#         else:
+#             iterate = len(rhs)
+#         shape = {x: y - 1 for x, y in self.object['shape'].iteritems() if y > iterate - 1}
+#         return namedarray({'array': self.object['array'][rhs], 'shape': shape})
+#
+#     def __setitem__(self, rhs, value):
+#         dummyarray = namedarray({'array': 0, 'shape': {}})
+#         self.object['array'][rhs] = (namedarray(self.object) * dummyarray + value)['array'][rhs]
+#
+#
+# class NamedArrayException(Exception):
+#     pass
